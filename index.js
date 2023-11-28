@@ -1,7 +1,7 @@
 const express = require('express')
 const qrcode = require('qrcode-terminal');
 const app = express()
-// const port = 3000;
+const port = 3000;
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const client = new Client({
     puppeteer: {
