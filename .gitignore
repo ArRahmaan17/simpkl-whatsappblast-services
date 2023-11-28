@@ -2,3 +2,5 @@
 /.wwebjs_cache
 /.wwebjs_auth
 package-lock.json
+stderr.log
+tmp
