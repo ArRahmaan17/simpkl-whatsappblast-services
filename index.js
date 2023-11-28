@@ -3,6 +3,13 @@ const qrcode = require('qrcode-terminal');
 const app = express()
 const port = 3000;
 const { Client, LocalAuth } = require('whatsapp-web.js');
+const chromium = require("chrome-aws-lambda");
+
+async () => {
+    await chromium.puppeteer.launch({
+        executablePath: await chromium.executablePath,
+    })
+};
 const client = new Client({
     puppeteer: {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
