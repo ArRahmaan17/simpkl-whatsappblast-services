@@ -5,7 +5,7 @@ const port = 3000;
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const client = new Client({
     puppeteer: {
-        args: ['--no-sandbox'],
+        args: ['--disable-setuid-sandbox'],
         headless: true,
     },
     authStrategy: new LocalAuth({
