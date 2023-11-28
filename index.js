@@ -12,7 +12,7 @@ const client = new Client({
     }),
 });
 
-app.listen(() => {
+app.listen(port, () => {
     console.log(`Application Started`);
 })
 client.on('qr', qr => {
