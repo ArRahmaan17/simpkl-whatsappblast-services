@@ -4,3 +4,4 @@
 package-lock.json
 stderr.log
 tmp
+/my-uploads/*
