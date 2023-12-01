@@ -1,8 +1,24 @@
 const express = require('express')
+const fs = require('fs');
 const qrcode = require('qrcode-terminal');
 const app = express()
 const port = 3000;
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        if (!fs.existsSync(`my-uploads/${req.params.phone_number}/`)) {
+            fs.mkdirSync(`my-uploads/${req.params.phone_number}/`);
+        }
+        cb(null, `my-uploads/${req.params.phone_number}/`)
+    },
+    filename: function (req, file, cb) {
+        const extension = file.originalname.split('.')[1]
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}.${extension}`;
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
+const upload = multer({ storage: storage })
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
 const client = new Client({
     puppeteer: {
@@ -10,7 +26,7 @@ const client = new Client({
         headless: true,
     },
     authStrategy: new LocalAuth({
-        clientId: "maman",
+        clientId: "Maman",
     }),
 });
 
@@ -24,14 +40,14 @@ client.on('qr', qr => {
 client.on('ready', async () => {
     console.log('Client is ready!');
     const bodyParser = require('body-parser')
-    const multer = require('multer')
-    const upload = multer()
     app.get('/', async (req, res) => {
         res.send('Whatsapp Services SIM PKL')
     });
 
     app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.urlencoded({ extended: true }));
+    // app.use();
+    // Attendance Warning for users    
     app.post('/attendance-warning', upload.array(), async (req, res) => {
         let replyMessage = `Di informasikan kepada:\n`;
         let mentions = [];
@@ -48,6 +64,24 @@ client.on('ready', async () => {
         replyMessage += 'Mohon untuk segera melakukan absensi di https://sim-pkl.nugcreative.my.id/';
         chats.sendMessage(replyMessage, { mentions });
         res.send({ 'status': 'Success', 'Message': "Test Success" });
-    })
+    });
+    // Attendance Warning for user
+    app.get('/attendance-warning/:phone_number', upload.array(), async (req, res) => {
+        const contact = await client.getContactById(`62${req.params.phone_number}@c.us`);
+        client.sendMessage(`62${req.params.phone_number}@c.us`, `Di informasikan kepada *${contact.name}* untuk segera melakukan presensi`);
+        res.send({ 'status': 'Success', 'Message': "Test Success" });
+    });
+    // Attendance Success for user
+    app.get('/attendance-success/:phone_number', upload.array(), async (req, res) => {
+        const contact = await client.getContactById(`62${req.params.phone_number}@c.us`);
+        client.sendMessage(`62${req.params.phone_number}@c.us`, `Hai *${contact.name}*, Anda telah berhasil melakukan presensi`);
+        res.send({ 'status': 'Success', 'Message': "Test Success" });
+    });
+    app.post('/attendance-notification/:phone_number', upload.single('file_attendance'), async (req, res) => {
+        const contact = await client.getContactById(`62${req.params.phone_number}@c.us`);
+        const media = MessageMedia.fromFilePath(req.file.path);
+        client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${contact.name} melakukan absensi` });
+        res.send({ 'status': 'Success', 'Message': "Test Success" });
+    });
 });
 client.initialize();
