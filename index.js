@@ -1,7 +1,8 @@
 const express = require('express')
 const fs = require('fs');
 const qrcode = require('qrcode-terminal');
-const app = express()
+const app = express();
+const cors = require('cors')
 const port = 3000;
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -29,7 +30,7 @@ const client = new Client({
         clientId: "Maman",
     }),
 });
-
+app.use(cors())
 app.listen(port, () => {
     console.log(`Application Started`);
 })
