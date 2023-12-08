@@ -7,10 +7,14 @@ const port = 3000;
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        if (!fs.existsSync(`my-uploads/${req.params.phone_number}/`)) {
-            fs.mkdirSync(`my-uploads/${req.params.phone_number}/`);
+        const folder = 'task-files';
+        if (req.params.phone_number != undefined) {
+            folder = req.params.phone_number;
         }
-        cb(null, `my-uploads/${req.params.phone_number}/`)
+        if (!fs.existsSync(`my-uploads/${folder}/`)) {
+            fs.mkdirSync(`my-uploads/${folder}/`);
+        }
+        cb(null, `my-uploads/${folder}/`)
     },
     filename: function (req, file, cb) {
         const extension = file.originalname.split('.')[1]
@@ -18,7 +22,7 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix)
     }
 })
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 
 const client = new Client({
@@ -82,6 +86,25 @@ client.on('ready', async () => {
         const media = MessageMedia.fromFilePath(req.file.path);
         client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${contact.name} melakukan absensi` });
         res.send({ 'status': 'Success', 'Message': "Success send notification for" + req.params.phone_number });
+    });
+    app.post('/task-notification', upload.single('task_thumbnail'), async (req, res) => {
+        let chats = await client.getChats();
+        chats = chats.find(chat => { return chat.name == 'Nitip Bro' });
+        phone_numbers = JSON.parse(req.body.phone_numbers);
+        let replyMessage = '';
+        let mentions = [];
+        for (let participant of chats.groupMetadata.participants) {
+            if (participant.id.user != '6285173007324' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
+                const contact = await client.getContactById(participant.id._serialized);
+                replyMessage += `@${participant.id.user} \n`;
+                mentions.push(contact)
+            }
+        }
+        replyMessage += `\nDiinformasikan tugas baru tentang *${req.body.title}* telah tiba🤣`
+        const media = MessageMedia.fromFilePath(req.file.path);
+        chats.sendMessage(media, { mentions: mentions, caption: replyMessage })
+        // client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${contact.name} melakukan absensi` });
+        res.send({ 'status': 'Success', 'Message': "Success send notification for all user in group" });
     });
 });
 client.initialize();
