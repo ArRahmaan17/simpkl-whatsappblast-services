@@ -48,13 +48,6 @@ client.on('ready', async () => {
     app.get('/', async (req, res) => {
         res.send('Whatsapp Services SIM PKL')
     });
-    app.get('/test-bot', async (req, res) => {
-        let chats = await client.getChats();
-        chats = chats.find((chat) => { return chat.name == 'Nitip Bro' });
-        chats.sendMessage(`Setiap tugas adalah kesempatan untuk tumbuh dan belajar. Semangat dan nikmatilah prosesnya!`);
-        // client.sendMessage('6289522983270@c.us', 'bot ready to use');
-        res.send('Whatsapp Services SIM PKL')
-    });
     client.on('message', function (message) {
         if (message.body == 'test') {
             message.reply('bot is online 🇵🇸');
