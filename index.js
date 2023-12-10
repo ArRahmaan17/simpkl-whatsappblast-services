@@ -48,6 +48,11 @@ client.on('ready', async () => {
     app.get('/', async (req, res) => {
         res.send('Whatsapp Services SIM PKL')
     });
+    client.on('message', function (message) {
+        if (message.body == 'test') {
+            message.reply('bot is online 🇵🇸');
+        }
+    })
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: true }));
