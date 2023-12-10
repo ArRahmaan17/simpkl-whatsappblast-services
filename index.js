@@ -3,11 +3,11 @@ const fs = require('fs');
 const qrcode = require('qrcode-terminal');
 const app = express();
 const cors = require('cors')
-const port = 3000;
+const port = 2000;
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const folder = 'task-files';
+        let folder = 'task-files';
         if (req.params.phone_number != undefined) {
             folder = req.params.phone_number;
         }
