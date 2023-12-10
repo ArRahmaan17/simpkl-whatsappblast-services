@@ -61,7 +61,7 @@ client.on('ready', async () => {
         let replyMessage = `Di informasikan kepada:\n`;
         let mentions = [];
         let chats = await client.getChats();
-        chats = chats.find(chat => { return chat.name == 'PKL Nug Creative' });
+        chats = chats.find(chat => { return chat.name == 'Nitip Bro' });
         phone_numbers = JSON.parse(req.body.phone_number);
         for (let participant of chats.groupMetadata.participants) {
             if (participant.id.user != '6285173007324' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
@@ -94,7 +94,7 @@ client.on('ready', async () => {
     });
     app.post('/task-notification', upload.single('task_thumbnail'), async (req, res) => {
         let chats = await client.getChats();
-        chats = chats.find(chat => { return chat.name == 'PKL Nug Creative' });
+        chats = chats.find(chat => { return chat.name == 'Nitip Bro' });
         phone_numbers = JSON.parse(req.body.phone_numbers);
         let replyMessage = '';
         let mentions = [];
