@@ -48,6 +48,13 @@ client.on('ready', async () => {
     app.get('/', async (req, res) => {
         res.send('Whatsapp Services SIM PKL')
     });
+    app.get('/test-bot', async (req, res) => {
+        let chats = await client.getChats();
+        chats = chats.find((chat) => { return chat.name == 'Nitip Bro' });
+        chats.sendMessage(`Setiap tugas adalah kesempatan untuk tumbuh dan belajar. Semangat dan nikmatilah prosesnya!`);
+        // client.sendMessage('6289522983270@c.us', 'bot ready to use');
+        res.send('Whatsapp Services SIM PKL')
+    });
     client.on('message', function (message) {
         if (message.body == 'test') {
             message.reply('bot is online 🇵🇸');
@@ -86,11 +93,11 @@ client.on('ready', async () => {
         client.sendMessage(`62${req.params.phone_number}@c.us`, `Hai *${contact.name}*, Anda telah berhasil melakukan presensi ${req.params.status}`);
         res.send({ 'status': 'Success', 'Message': "Success send notification for" + req.params.phone_number });
     });
-    app.post('/attendance-notification/:phone_number', upload.single('file_attendance'), async (req, res) => {
-        const contact = await client.getContactById(`62${req.params.phone_number}@c.us`);
+    app.post('/attendance-notification/:phone_number/:student_phone_number', upload.single('file_attendance'), async (req, res) => {
+        const student_contact = await client.getContactById(`62${req.params.student_phone_number}@c.us`);
         const media = MessageMedia.fromFilePath(req.file.path);
-        client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${contact.name} melakukan absensi` });
-        res.send({ 'status': 'Success', 'Message': "Success send notification for" + req.params.phone_number });
+        client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${student_contact.name} melakukan absensi` });
+        res.send({ 'status': 'Success', 'Message': "Success send notification for " + req.params.phone_number });
     });
     app.post('/task-notification', upload.single('task_thumbnail'), async (req, res) => {
         let chats = await client.getChats();
