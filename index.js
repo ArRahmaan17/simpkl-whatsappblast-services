@@ -71,6 +71,9 @@ client.on('ready', async () => {
             }
         }
         replyMessage += 'Mohon untuk segera melakukan absensi di https://sim-pkl.nugcreative.my.id/';
+        if (mentions.length == 0) {
+            replyMessage = `Semua Telah Melakukan Absensi.\n Semangat pkl hari ini 🔥🔥🔥`;
+        }
         chats.sendMessage(replyMessage, { mentions });
         res.send({ 'status': 'Success', 'Message': "Success send notification for all users" });
     });
