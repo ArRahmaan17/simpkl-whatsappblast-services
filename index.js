@@ -80,7 +80,7 @@ client.on('ready', async () => {
     // Attendance Warning for user
     app.get('/attendance-warning/:phone_number', upload.array(), async (req, res) => {
         const contact = await client.getContactById(`62${req.params.phone_number}@c.us`);
-        client.sendMessage(`62${req.params.phone_number}@c.us`, `Di informasikan kepada *${contact.name}* untuk segera melakukan presensi https://sim-pkl.nugcreative.my.id/`);
+        client.sendMessage(`62${req.params.phone_number}@c.us`, `Di informasikan kepada *62${req.params.phone_number}* untuk segera melakukan presensi https://sim-pkl.nugcreative.my.id/`);
         res.send({ 'status': 'Success', 'Message': "Success send notification for" + req.params.phone_number });
     });
     // Attendance Success for user
@@ -92,7 +92,7 @@ client.on('ready', async () => {
     app.post('/attendance-notification/:phone_number/:student_phone_number', upload.single('file_attendance'), async (req, res) => {
         const student_contact = await client.getContactById(`62${req.params.student_phone_number}@c.us`);
         const media = MessageMedia.fromFilePath(req.file.path);
-        client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `${student_contact.name} melakukan absensi` });
+        client.sendMessage(`62${req.params.phone_number}@c.us`, media, { caption: `62${req.params.student_phone_number} melakukan absensi` });
         res.send({ 'status': 'Success', 'Message': "Success send notification for " + req.params.phone_number });
     });
     app.post('/task-notification', upload.single('task_thumbnail'), async (req, res) => {
