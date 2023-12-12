@@ -66,7 +66,7 @@ client.on('ready', async () => {
         // chats = chats.find(chat => { return chat.name == 'Nitip Bro' });
         phone_numbers = JSON.parse(req.body.phone_number);
         for (let participant of chats.groupMetadata.participants) {
-            if (participant.id.user != '6285173007324' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
+            if (participant.id.user != '6287846725064' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
                 replyMessage += `@${participant.id.user} \n`;
                 mentions.push(participant.id._serialized)
             }
@@ -91,7 +91,7 @@ client.on('ready', async () => {
         let replyMessage = '';
         let mentions = [];
         for (let participant of chats.groupMetadata.participants) {
-            if (participant.id.user != '6285173007324' && req.params.phone_number == `${participant.id.user.split('62').join('')}`) {
+            if (participant.id.user != '6287846725064' && req.params.phone_number == `${participant.id.user.split('62').join('')}`) {
                 replyMessage += `@${participant.id.user} telah melakukan absensi ${req.params.status}`;
                 mentions.push(participant.id._serialized)
             }
@@ -114,7 +114,7 @@ client.on('ready', async () => {
         let replyMessage = '';
         let mentions = [];
         for (let participant of chats.groupMetadata.participants) {
-            if (participant.id.user != '6285173007324' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
+            if (participant.id.user != '6287846725064' && phone_numbers.includes(`${participant.id.user.split('62').join('')}`)) {
                 replyMessage += `@${participant.id.user} \n`;
                 mentions.push(participant.id._serialized)
             }
