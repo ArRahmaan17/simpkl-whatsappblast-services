@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors')
 const port = 2000;
 const multer = require('multer')
+const os = require('os')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let folder = 'task-files';
@@ -52,6 +53,8 @@ client.on('ready', async () => {
     client.on('message', function (message) {
         if (message.body == 'test') {
             message.reply('bot is online 🇵🇸');
+        } else if (message.body == 'resources') {
+            message.reply(`CPU: ${os.cpus().map((core) => { return `${core.speed / 1000} Ghz` })} \n MEM: ${(os.freemem() / 1000000000).toFixed(2)} GB \n UP: ${Math.round(os.uptime() / 3600)} Hours`);
         }
     })
 
